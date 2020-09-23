@@ -1,0 +1,24 @@
+---
+- name: Command Module Examples
+  hosts: check_point_gaia
+  gather_facts: no
+  tasks:
+    - name: "Check for a Config Lock"
+      command: "clish -c 'show config-lock'"
+      register: lock_status
+
+    - name: "Fail if Configuration is found to be locked"
+      fail:
+        msg: "The Configuration is locked.  Failing playbook"
+      when: "'CLINFR0771' in lock_status.stdout"
+
+    - name: "Configure DNS and NTP Settings on Gateway"
+      command: "{{ item }}"
+      with_items:
+        - clish -c 'set dns primary 8.8.4.4' -s
+        - clish -c 'set dns secondary 8.8.8.8' -s
+        - clish -c 'set dns tertiary 1.1.1.1' -s
+        - clish -c 'set ntp server primary 1.pool.ntp.org version 4' -s
+        - clish -c 'set ntp server secondary 0.pool.ntp.org version 4' -s
+        - clish -c 'set ntp active on' -s
+        - clish -c 'unlock database'
