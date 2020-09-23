@@ -1,0 +1,20 @@
+---
+- name: Command Module Examples
+  hosts: check_point_gaia
+  gather_facts: no
+  tasks:
+    - name: "Check for a Config Lock"
+      command: "clish -c 'show config-lock'"
+      register: lock_status
+
+    - name: "Fail if the configuration is found to be locked"
+      fail:
+        msg: "The Configuration is locked.  Failing playbook"
+      when: "'CLINFR0771' in lock_status.stdout"
+
+    - name: "Show static route configuration"
+      command: "clish -c 'show configuration static-route'"
+      register: routes
+
+    - debug:
+        msg: "{{ routes.stdout_lines }}"
