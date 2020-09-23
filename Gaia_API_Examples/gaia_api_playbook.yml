@@ -1,0 +1,17 @@
+---
+- name: Gaia API Examples
+  hosts: check_point_gaia
+  connection: httpapi
+  gather_facts: no
+  tasks:
+    - name: Manage Hostname on Gaia
+      check_point.gaia.cp_gaia_hostname:
+        name: "r80dot40_ansible_gw"
+    - name: Manage eth1 on Gaia
+      check_point.gaia.cp_gaia_physical_interface:
+        name: "eth1"
+        ipv4_address: "172.16.254.254"
+        ipv4_mask_length: 25
+        mtu: "1500"
+        enabled: True
+        comments: "Ansible eth1 example"
