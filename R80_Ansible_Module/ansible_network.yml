@@ -1,0 +1,13 @@
+---
+- name: R80 Network Example
+  hosts: check_point
+  connection: httpapi
+  gather_facts: false
+  tasks:
+    - name: Task to manage a network
+      check_point.mgmt.cp_mgmt_network:
+        name: "My Ansible Network 1"
+        subnet: "172.31.254.0"
+        mask_length: 24
+        auto_publish_session: true
+        state: present
